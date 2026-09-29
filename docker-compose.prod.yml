@@ -1,0 +1,71 @@
+services:
+  cidades-esg-api-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fiap-devops/cidades-esg-api:prod
+    container_name: cidades-esg-api-prod
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - APP_ENVIRONMENT=production
+      - SPRING_PROFILES_ACTIVE=prod
+      - MONGODB_URI=mongodb://prod_admin:prod_super_secure_pass@mongodb-prod:27017/cidades_esg_prod?authSource=admin
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError
+    depends_on:
+      mongodb-prod:
+        condition: service_healthy
+    networks:
+      - esg-prod-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 25s
+
+  mongodb-prod:
+    image: mongo:7.0
+    container_name: mongodb-esg-prod
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=prod_admin
+      - MONGO_INITDB_ROOT_PASSWORD=prod_super_secure_pass
+      - MONGO_INITDB_DATABASE=cidades_esg_prod
+    volumes:
+      - mongodb_prod_data:/data/db
+    networks:
+      - esg-prod-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  esg-prod-network:
+    driver: bridge
+    name: esg-prod-net
+
+volumes:
+  mongodb_prod_data:
+    driver: local
+    name: esg_prod_volume

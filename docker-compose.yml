@@ -1,0 +1,77 @@
+services:
+  # Microservico Principal Cidades ESG Inteligentes
+  cidades-esg-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fiap-devops/cidades-esg-api:latest
+    container_name: cidades-esg-api-local
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - APP_ENVIRONMENT=local
+      - MONGODB_URI=mongodb://root:esg_secret_pass@mongodb:27017/cidades_esg?authSource=admin
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - esg-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Banco de Dados NoSQL MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb-esg-local
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=esg_secret_pass
+      - MONGO_INITDB_DATABASE=cidades_esg
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - esg-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Interface Web para Gestao do Banco (Mongo Express)
+  mongo-express:
+    image: mongo-express:1.0.2-20
+    container_name: mongo-express-esg
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=esg_secret_pass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - esg-network
+
+networks:
+  esg-network:
+    driver: bridge
+    name: esg-network-local
+
+volumes:
+  mongodb_data:
+    driver: local
+    name: esg_mongodb_volume

@@ -1,0 +1,58 @@
+services:
+  cidades-esg-api-staging:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fiap-devops/cidades-esg-api:staging
+    container_name: cidades-esg-api-staging
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - APP_ENVIRONMENT=staging
+      - SPRING_PROFILES_ACTIVE=staging
+      - MONGODB_URI=mongodb://staging_user:staging_secret_pass@mongodb-staging:27017/cidades_esg_staging?authSource=admin
+      - JAVA_OPTS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0
+    depends_on:
+      mongodb-staging:
+        condition: service_healthy
+    networks:
+      - esg-staging-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  mongodb-staging:
+    image: mongo:7.0
+    container_name: mongodb-esg-staging
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=staging_user
+      - MONGO_INITDB_ROOT_PASSWORD=staging_secret_pass
+      - MONGO_INITDB_DATABASE=cidades_esg_staging
+    volumes:
+      - mongodb_staging_data:/data/db
+    networks:
+      - esg-staging-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  esg-staging-network:
+    driver: bridge
+    name: esg-staging-net
+
+volumes:
+  mongodb_staging_data:
+    driver: local
+    name: esg_staging_volume
