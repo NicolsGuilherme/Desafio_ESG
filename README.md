@@ -162,9 +162,31 @@ CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 
 ## 📸 Evidências reproduzíveis de funcionamento
 
-Os resultados abaixo correspondem aos comandos automatizados pela esteira. Após publicar o projeto no GitHub, a tela da execução em **Actions** fornece os prints finais dos quatro jobs para anexar à entrega.
+As imagens abaixo foram capturadas de uma execução real do workflow no GitHub Actions.
 
-### 1. Execução dos Testes Automatizados (CI)
+### 1. Pipeline completo — quatro jobs aprovados
+
+![Pipeline do GitHub Actions com os quatro jobs aprovados](docs/evidencias/01-pipeline-quatro-jobs.png)
+
+### 2. Testes automatizados — 7 testes aprovados
+
+![Resultado dos sete testes sem falhas](docs/evidencias/02-testes-sete-aprovados.png)
+
+### 3. Construção da imagem Docker
+
+![Build da imagem Docker concluído com sucesso](docs/evidencias/03-docker-build-success.png)
+
+### 4. Staging — healthcheck e dashboard
+
+![Healthcheck UP e dashboard do ambiente staging](docs/evidencias/04-staging-health-dashboard.png)
+
+### 5. Produção acadêmica — healthcheck e dashboard
+
+![Healthcheck UP e dashboard do ambiente de produção](docs/evidencias/05-producao-health-dashboard.png)
+
+### Saídas técnicas complementares
+
+#### Execução dos Testes Automatizados (CI)
 ```
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
@@ -183,7 +205,7 @@ Os resultados abaixo correspondem aos comandos automatizados pela esteira. Após
 [INFO] BUILD SUCCESS
 ```
 
-### 2. Status dos Containers em Execução (`docker compose ps`)
+#### Status dos Containers em Execução (`docker compose ps`)
 ```
 NAME                     IMAGE                                COMMAND                  SERVICE             CREATED         STATUS                   PORTS
 cidades-esg-api-local    fiap-devops/cidades-esg-api:latest   "/usr/bin/dumb-init …"   cidades-esg-api     2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:8080->8080/tcp
@@ -191,7 +213,7 @@ mongodb-esg-local        mongo:7.0                            "docker-entrypoint
 mongo-express-esg        mongo-express:1.0.2-20               "/sbin/tini -- /dock…"   mongo-express       2 minutes ago   Up 2 minutes             0.0.0.0:8081->8081/tcp
 ```
 
-### 3. Evidência do Endpoint Actuator Health (`GET /actuator/health`)
+#### Evidência do Endpoint Actuator Health (`GET /actuator/health`)
 ```json
 {
   "status": "UP",
@@ -228,7 +250,7 @@ mongo-express-esg        mongo-express:1.0.2-20               "/sbin/tini -- /do
 }
 ```
 
-### 4. Evidência do Dashboard ESG em Staging (`GET http://localhost:8081/api/v1/dashboard/summary`)
+#### Dashboard ESG em Staging (`GET http://localhost:8081/api/v1/dashboard/summary`)
 ```json
 {
   "environment": "staging",
@@ -252,7 +274,7 @@ mongo-express-esg        mongo-express:1.0.2-20               "/sbin/tini -- /do
 }
 ```
 
-### 5. Evidência do Dashboard ESG em Produção (`GET http://localhost:8080/api/v1/dashboard/summary`)
+#### Dashboard ESG em Produção (`GET http://localhost:8080/api/v1/dashboard/summary`)
 ```json
 {
   "environment": "production",

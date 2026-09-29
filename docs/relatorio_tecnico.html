@@ -308,31 +308,17 @@ jobs:
 
     <h2 class="section-title">5. Evidências de Execução e Funcionamento</h2>
 
-    <div class="card-box">
-      <h3 class="subsection-title">✓ 5.1 Testes Automatizados Aprovados (Maven / JUnit)</h3>
-      <div class="code-block">
-[INFO] Running br.com.fiap.cidadesesg.SensorServiceTest
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0 - SUCCESS
-[INFO] Running br.com.fiap.cidadesesg.EmissionServiceTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0 - SUCCESS
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
-[INFO] Analyzed bundle 'cidades-esg-inteligentes' with 20 classes
-[INFO] BUILD SUCCESS
-      </div>
+    <p>Capturas de uma execução real do workflow no GitHub Actions:</p>
 
-      <h3 class="subsection-title">✓ 5.2 Status dos Containers em Execução (Docker Compose)</h3>
-      <div class="code-block">
-NAME                     IMAGE                                STATUS                   PORTS
-cidades-esg-api-staging  fiap-devops/cidades-esg-api:staging  Up (healthy)   0.0.0.0:8081->8081/tcp
-mongodb-esg-staging      mongo:7.0                            Up (healthy)   0.0.0.0:27018->27017/tcp
-cidades-esg-api-prod     fiap-devops/cidades-esg-api:prod     Up (healthy)   0.0.0.0:8080->8080/tcp
-      </div>
+    <img src="evidencias/01-pipeline-quatro-jobs.png" alt="Quatro jobs aprovados" style="width:100%; border:1px solid #cbd5e1; border-radius:4px; margin:3px 0 6px;">
 
-      <h3 class="subsection-title">✓ 5.3 Resposta do Endpoint Actuator Health (UP)</h3>
-      <div class="code-block">
-{ "status": "UP", "components": { "diskSpace": {"status": "UP"}, "mongo": {"status": "UP"}, "readinessState": {"status": "UP"} } }
-      </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+      <img src="evidencias/02-testes-sete-aprovados.png" alt="Sete testes aprovados" style="width:100%; border:1px solid #cbd5e1; border-radius:4px;">
+      <img src="evidencias/03-docker-build-success.png" alt="Build Docker aprovado" style="width:100%; max-height:115px; object-fit:cover; object-position:bottom; border:1px solid #cbd5e1; border-radius:4px;">
+      <img src="evidencias/04-staging-health-dashboard.png" alt="Staging saudável" style="width:100%; max-height:145px; object-fit:contain; border:1px solid #cbd5e1; border-radius:4px;">
+      <img src="evidencias/05-producao-health-dashboard.png" alt="Produção saudável" style="width:100%; max-height:145px; object-fit:contain; border:1px solid #cbd5e1; border-radius:4px;">
     </div>
+
   </div>
 
   <div class="footer-bar">
