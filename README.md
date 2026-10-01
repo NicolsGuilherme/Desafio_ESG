@@ -22,7 +22,7 @@ Esta entrega consolida práticas de **Engenharia DevOps**, integrando CI/CD com 
 
 ---
 
-## 🐳 Como executar localmente com Docker
+## Como executar localmente com Docker
 
 ### Pré-requisitos
 * **Docker Engine** (v24.0+) instalado e ativo.
@@ -68,7 +68,7 @@ docker compose down
 
 ---
 
-## 🔄 Pipeline CI/CD
+## Pipeline CI/CD
 
 A esteira de integração e entrega contínua (**CI/CD**) foi desenvolvida utilizando o **GitHub Actions** (`.github/workflows/ci-cd.yml`). Ela é disparada automaticamente a cada `push` ou `pull_request` nas branches `main` e `develop`.
 
@@ -327,3 +327,6 @@ mongo-express-esg        mongo-express:1.0.2-20               "/sbin/tini -- /do
 | **README.md com instruções e prints** | [X] |
 | **Documentação técnica com evidências (PDF ou PPT)** | [X] |
 | **Deploy realizado nos ambientes staging e produção** | [X] |
+
+## Link do repositório no GitHub:
+https://github.com/NicolsGuilherme/Desafio_ESG
